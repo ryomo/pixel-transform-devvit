@@ -24,16 +24,16 @@ Devvit.configure({
 
 // Add a custom post type to Devvit
 Devvit.addCustomPostType({
-  name: 'Webview Example',
+  name: 'Pixel Transform',
   height: 'tall',
   render: (context) => {
-    // Load username with `useAsync` hook
+    // Load username with `useState` hook
     const [username] = useState(async () => {
       const currUser = await context.reddit.getCurrentUser();
       return currUser?.username ?? 'anon';
     });
 
-    // Load latest counter from redis with `useAsync` hook
+    // Load latest counter from redis with `useState` hook
     const [counter, setCounter] = useState(async () => {
       const redisCount = await context.redis.get(`counter_${context.postId}`);
       return Number(redisCount ?? 0);
@@ -85,7 +85,7 @@ Devvit.addCustomPostType({
           alignment="middle center"
         >
           <text size="xlarge" weight="bold">
-            Example App
+            Pixel Transform
           </text>
           <spacer />
           <vstack alignment="start middle">

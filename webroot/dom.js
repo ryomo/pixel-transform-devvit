@@ -5,7 +5,9 @@ export class Dom {
   /**
    * @param {Puzzle} puzzle
    */
-  initEventListeners(puzzle) {
+  init(puzzle) {
+    this.puzzle = puzzle;
+
     // #btn-reset
     const resetButton = document.getElementById('btn-reset');
     resetButton.addEventListener('click', async () => {
@@ -88,8 +90,13 @@ export class Dom {
 
         if (isClickable) {
           div.addEventListener('click', () => {
+            if (this.puzzle?.isApplyingRule) {
+              return;
+            }
+
             cell = (cell === 1) ? 0 : 1;
             div.className = `cell ${cell === 1 ? 'black' : 'white'}`;
+
             // Update pixels array
             pixels[i][j] = cell;
           });

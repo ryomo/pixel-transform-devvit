@@ -4,4 +4,4 @@ import { Puzzle } from './puzzle.js'
 const dom = new Dom();
 const puzzle = new Puzzle(dom);
 await puzzle.init();
-dom.init(puzzle);
+dom.initEventListeners(puzzle);

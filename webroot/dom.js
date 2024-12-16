@@ -5,7 +5,7 @@ export class Dom {
   /**
    * @param {Puzzle} puzzle
    */
-  init(puzzle) {
+  initEventListeners(puzzle) {
     // #btn-reset
     const resetButton = document.getElementById('btn-reset');
     resetButton.addEventListener('click', async () => {
@@ -21,7 +21,7 @@ export class Dom {
       if (puzzle.checkSolved()) {
         console.log('Solved!');
 
-        showSolvedPage();
+        this.showSolvedPage();
         this.renderPixels('pixels-solved', puzzle.goalPixelsArray);
       }
     });
@@ -29,25 +29,32 @@ export class Dom {
     // #btn-next-puzzle
     const nextPuzzleButton = document.getElementById('btn-next-puzzle');
     nextPuzzleButton.addEventListener('click', async () => {
-      showSolvedPage(false);
+      this.showSolvedPage(false);
 
       puzzle.puzzleIndex += 1;
       await puzzle.init();
     });
-
-    /**
-     * Show solved page.
-     * @param {boolean} solvedPage - If set to false, show the main page.
-     */
-    function showSolvedPage(solvedPage = true) {
-      const main = document.getElementById('main');
-      const solved = document.getElementById('solved');
-
-      main.style.display = (solvedPage) ? 'none' : 'grid';
-      solved.style.display = (solvedPage) ? 'grid' : 'none';
-    }
   }
 
+  /**
+   * Show "Solved" page
+   * @param {boolean} solvedPage - If set to false, show the main page.
+   */
+  showSolvedPage(solvedPage = true) {
+    const main = document.getElementById('main');
+    const solved = document.getElementById('solved');
+
+    main.style.display = (solvedPage) ? 'none' : 'grid';
+    solved.style.display = (solvedPage) ? 'grid' : 'none';
+  }
+
+  /**
+   * Render all pixel matrices
+   * @param {Array} targetPixelsArray
+   * @param {Array} goalPixelsArray
+   * @param {Array} searchPixelsArray
+   * @param {Array} replacePixelsArray
+   */
   renderAllPixels(targetPixelsArray, goalPixelsArray, searchPixelsArray, replacePixelsArray) {
     this.renderPixels('pixels-target', targetPixelsArray);
     this.renderPixels('pixels-goal', goalPixelsArray);
@@ -55,6 +62,12 @@ export class Dom {
     this.renderPixels('pixels-replace', replacePixelsArray, true);
   }
 
+  /**
+   * Render pixels
+   * @param {number} id
+   * @param {Array} pixels
+   * @param {boolean} isClickable
+   */
   renderPixels(id, pixels, isClickable = false) {
     const pixelElement = document.getElementById(id);
 
@@ -84,11 +97,21 @@ export class Dom {
     });
   }
 
+  /**
+   * Update the counter on the page
+   * @param {number} counter
+   * @param {number} counterMax
+   */
   updateCounter(counter, counterMax) {
     const counterElm = document.getElementById('counter');
     counterElm.innerText = counter + ' / ' + counterMax;
   }
 
+  /**
+   * Show metadata on the page
+   * @param {number} puzzleNum
+   * @param {string} hint
+   */
   showMetadata(puzzleNum, hint) {
     const puzzleNumElm = document.getElementById('puzzle-num');
     puzzleNumElm.innerText = puzzleNum

@@ -91,7 +91,7 @@ export class Puzzle {
 
             // Replace pixels
             this.replacePixels(i, j, searchRowLength, searchColLength);
-            this.dom.renderPixels('pixels-target', this.targetPixelsArray);
+            this.dom.renderPixels('pixels-target', this.targetPixelsArray, true);
             this.dom.addClassToArea(i, j, searchRowLength, searchColLength, 'matched');
             await this.sleep();
 
@@ -106,7 +106,7 @@ export class Puzzle {
         }
       }
 
-      this.dom.renderPixels('pixels-target', this.targetPixelsArray);
+      this.dom.renderPixels('pixels-target', this.targetPixelsArray, true);
       console.log('Rule applied');
       this.isApplyingRule = false;
     };

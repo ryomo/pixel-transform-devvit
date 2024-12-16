@@ -56,19 +56,20 @@ export class Dom {
    * @param {Array} replacePixelsArray
    */
   renderAllPixels(targetPixelsArray, goalPixelsArray, searchPixelsArray, replacePixelsArray) {
-    this.renderPixels('pixels-target', targetPixelsArray);
+    this.renderPixels('pixels-target', targetPixelsArray, true);
     this.renderPixels('pixels-goal', goalPixelsArray);
-    this.renderPixels('pixels-search', searchPixelsArray, true);
-    this.renderPixels('pixels-replace', replacePixelsArray, true);
+    this.renderPixels('pixels-search', searchPixelsArray, false, true);
+    this.renderPixels('pixels-replace', replacePixelsArray, false, true);
   }
 
   /**
    * Render pixels
    * @param {number} id
    * @param {Array} pixels
+   * @param {boolean} addId
    * @param {boolean} isClickable
    */
-  renderPixels(id, pixels, isClickable = false) {
+  renderPixels(id, pixels, addId = false, isClickable = false) {
     const pixelElement = document.getElementById(id);
 
     // Clear previous pixels
@@ -80,7 +81,9 @@ export class Dom {
     pixels.forEach((row, i) => {
       row.forEach((cell, j) => {
         const div = document.createElement('div');
-        div.id = `cell-${i}-${j}`;
+        if (addId) {
+          div.id = `cell-${i}-${j}`;
+        }
         div.className = `cell ${cell === 1 ? 'black' : 'white'}`;
 
         if (isClickable) {

@@ -1,73 +1,41 @@
 class App {
 
   constructor() {
+    this.puzzleIndex = 0;
+
     this.targetPixelsArray = [];
     this.goalPixelsArray = [];
     this.searchPixelsArray = [];
     this.replacePixelsArray = [];
 
-    const output = document.querySelector('#messageOutput');
-    // const increaseButton = document.querySelector('#btn-increase');
-    // const decreaseButton = document.querySelector('#btn-decrease');
-    const usernameLabel = document.querySelector('#username');
-    const counterLabel = document.querySelector('#counter');
-    let counter = 0;
-
-    // When the Devvit app sends a message with `context.ui.webView.postMessage`, this will be triggered
-    window.addEventListener('message', (ev) => {
-      const { type, data } = ev.data;
-
-      // Reserved type for messages sent via `context.ui.webView.postMessage`
-      if (type === 'devvit-message') {
-        const { message } = data;
-
-        // Always output full message
-        output.replaceChildren(JSON.stringify(message, undefined, 2));
-
-        // Load initial data
-        if (message.type === 'initialData') {
-          const { username, currentCounter } = message.data;
-          usernameLabel.innerText = username;
-          counterLabel.innerText = counter = currentCounter;
-        }
-
-        // Update counter
-        if (message.type === 'updateCounter') {
-          const { currentCounter } = message.data;
-          counterLabel.innerText = counter = currentCounter;
-        }
-      }
-    });
-
-    // increaseButton.addEventListener('click', () => {
-    //   // Sends a message to the Devvit app
-    //   window.parent?.postMessage(
-    //     { type: 'setCounter', data: { newCounter: Number(counter + 1) } },
-    //     '*'
-    //   );
-    // });
-
-    // decreaseButton.addEventListener('click', () => {
-    //   // Sends a message to the Devvit app
-    //   window.parent?.postMessage(
-    //     { type: 'setCounter', data: { newCounter: Number(counter - 1) } },
-    //     '*'
-    //   );
-    // });
+    this.counter = 0;
+    this.counterMax = 0;
   }
 
-  async loadPixels(sampleNumber) {
-    const samples = await fetch('samples.json')
+  async init() {
+    await this.loadPuzzleData(this.puzzleIndex);
+    this.renderAllPixels();
+    this.counter = 0;
+    this.updateCounter();
+    this.showMetadata();
+  }
+
+  async loadPuzzleData(puzzleIndex) {
+    const puzzles = await fetch('puzzles.json')
       .then(response => response.json());
-    this.targetPixelsArray = samples[sampleNumber].target;
-    this.goalPixelsArray = samples[sampleNumber].goal;
-    this.searchPixelsArray = samples[sampleNumber].search;
-    this.replacePixelsArray = samples[sampleNumber].replace;
-    console.log(this.replacePixelsArray)
+
+    this.puzzleNum = puzzles[puzzleIndex].no;
+    this.counterMax = puzzles[puzzleIndex].count;
+    this.hint = puzzles[puzzleIndex].hint;
+
+    this.targetPixelsArray = puzzles[puzzleIndex].target;
+    this.goalPixelsArray = puzzles[puzzleIndex].goal;
+    this.searchPixelsArray = puzzles[puzzleIndex].search;
+    this.replacePixelsArray = puzzles[puzzleIndex].replace;
   }
 
   renderAllPixels() {
-    this.renderPixels('pixels-main', this.targetPixelsArray);
+    this.renderPixels('pixels-target', this.targetPixelsArray);
     this.renderPixels('pixels-goal', this.goalPixelsArray);
     this.renderPixels('pixels-search', this.searchPixelsArray, true);
     this.renderPixels('pixels-replace', this.replacePixelsArray, true);
@@ -102,46 +70,115 @@ class App {
     });
   }
 
-  async applyRule() {
-    console.log('Applying rule');
+  updateCounter() {
+    const counterElm = document.getElementById('counter');
+    counterElm.innerText = this.counter + ' / ' + this.counterMax;
+  }
 
-    const targetRowLength = this.targetPixelsArray.length;
-    const targetColLength = this.targetPixelsArray[0].length;
-    const searchRowLength = this.searchPixelsArray.length;
-    const searchColLength = this.searchPixelsArray[0].length;
+  showMetadata() {
+    const puzzleNumElm = document.getElementById('puzzle-num');
+    puzzleNumElm.innerText = this.puzzleNum
 
-    for (let i = 0; i <= targetRowLength - searchRowLength; i++) {
-      for (let j = 0; j <= targetColLength - searchColLength; j++) {
-        // Check if search pixels match
-        const isMatching = this.checkPixelsMatch(i, j, searchRowLength, searchColLength);
+    const hintElm = document.getElementById('hint');
+    hintElm.innerText = this.hint;
+  }
 
-        // Replace if search matches
-        if (isMatching) {
-          this.addClassToArea(i, j, searchRowLength, searchColLength, 'matched');
-          await this.sleep(500);
-
-          // Replace pixels
-          this.replacePixels(i, j, searchRowLength, searchColLength);
-          this.renderPixels('pixels-main', this.targetPixelsArray);
-          this.addClassToArea(i, j, searchRowLength, searchColLength, 'matched');
-          await this.sleep(500);
-
-        } else {
-          this.addClassToArea(i, j, searchRowLength, searchColLength, 'search');
-          // await this.sleep(2000 / (i*j));
-          await this.sleep(500);
-        }
-
-        // await this.sleep(10000);
-
-        // Remove class from search area
-        this.removeClassFromArea(i, j, searchRowLength, searchColLength, 'search');
-        this.removeClassFromArea(i, j, searchRowLength, searchColLength, 'matched');
-      }
+  /**
+   * Apply the rule to the target pixels
+   * 1. Check if the search pixels match the target pixels
+   * 2. Replace the target pixels with the replace pixels
+   * 3. Render the updated target pixels
+   * @returns Promise<void>
+   */
+  applyRule() {
+    if (this.isApplyingRule) {
+      console.log('Rule is already being applied');
+      return;
     }
 
-    this.renderPixels('pixels-main', this.targetPixelsArray);
-    console.log('Rule applied');
+    console.log('Applying rule');
+
+    this.applyRulePromise = null;
+
+    const _applyRuleFunc = async () => {
+      this.isApplyingRule = true;
+
+      this.counter += 1;
+      this.updateCounter();
+
+      const targetRowLength = this.targetPixelsArray.length;
+      const targetColLength = this.targetPixelsArray[0].length;
+      const searchRowLength = this.searchPixelsArray.length;
+      const searchColLength = this.searchPixelsArray[0].length;
+
+      for (let i = 0; i <= targetRowLength - searchRowLength; i++) {
+        for (let j = 0; j <= targetColLength - searchColLength; j++) {
+          if (!this.isApplyingRule) {
+            return;
+          }
+
+          // Check if search pixels match
+          const isMatching = this.checkPixelsMatch(i, j, searchRowLength, searchColLength);
+
+          // Replace if search matches
+          if (isMatching) {
+            this.addClassToArea(i, j, searchRowLength, searchColLength, 'matched');
+            await this.sleep();
+
+            // Replace pixels
+            this.replacePixels(i, j, searchRowLength, searchColLength);
+            this.renderPixels('pixels-target', this.targetPixelsArray);
+            this.addClassToArea(i, j, searchRowLength, searchColLength, 'matched');
+            await this.sleep();
+
+          } else {
+            this.addClassToArea(i, j, searchRowLength, searchColLength, 'search');
+            await this.sleep();
+          }
+
+          // Remove class from search area
+          this.removeClassFromArea(i, j, searchRowLength, searchColLength, 'search');
+          this.removeClassFromArea(i, j, searchRowLength, searchColLength, 'matched');
+        }
+      }
+
+      this.renderPixels('pixels-target', this.targetPixelsArray);
+      console.log('Rule applied');
+      this.isApplyingRule = false;
+    };
+
+    this.applyRulePromise = _applyRuleFunc();
+    return this.applyRulePromise;
+  }
+
+  checkSolved() {
+    const targetRowLength = this.targetPixelsArray.length;
+    const targetColLength = this.targetPixelsArray[0].length;
+
+    for (let i = 0; i < targetRowLength; i++) {
+      for (let j = 0; j < targetColLength; j++) {
+        if (this.targetPixelsArray[i][j] !== this.goalPixelsArray[i][j]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Abort `applyRule()`
+   * @returns Promise<void>
+   */
+  async abortApplyingRule() {
+    if (!this.isApplyingRule) {
+      return;
+    }
+    console.log('Aborting');
+
+    this.isApplyingRule = false;
+    if (this.applyRulePromise) {
+      await this.applyRulePromise.then(console.log('Aborted'))
+    }
   }
 
   /**
@@ -217,22 +254,48 @@ class App {
    * @param {number} ms - milliseconds
    * @returns
    */
-  async sleep(ms) {
+  async sleep(ms = 500) {
     return await new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 
-const num = 0
-
 const app = new App();
-await app.loadPixels(num);
-app.renderAllPixels();
+await app.init();
 
-const resetButton = document.querySelector('#btn-reset');
+const resetButton = document.getElementById('btn-reset');
 resetButton.addEventListener('click', async () => {
-  await app.loadPixels(num);
-  app.renderAllPixels();
+  await app.abortApplyingRule();
+  await app.init();
 });
 
-const applyButton = document.querySelector('#btn-apply');
-applyButton.addEventListener('click', () => app.applyRule());
+const applyButton = document.getElementById('btn-apply');
+applyButton.addEventListener('click', async () => {
+  await app.applyRule();
+
+  if (app.checkSolved()) {
+    console.log('Solved!');
+
+    showSolvedPage();
+    app.renderPixels('pixels-solved', app.goalPixelsArray);
+  }
+});
+
+const nextPuzzleButton = document.getElementById('btn-next-puzzle');
+nextPuzzleButton.addEventListener('click', async () => {
+  showSolvedPage(false);
+
+  app.puzzleIndex += 1;
+  await app.init();
+});
+
+/**
+ * Show solved page.
+ * @param {boolean} solvedPage - If set to false, show the main page.
+ */
+function showSolvedPage(solvedPage = true) {
+  const main = document.getElementById('main');
+  const solved = document.getElementById('solved');
+
+  main.style.display = (solvedPage) ? 'none' : 'grid';
+  solved.style.display = (solvedPage) ? 'grid' : 'none';
+}

@@ -17,16 +17,27 @@
     <button id="btn-decrease">Decrease Counter ⬇️</button>
   </div> -->
 
-  <div class="grid-container">
+  <div id="main" class="grid-container">
 
     <div class="grid-top-left">
-      <h1>Pixel Transform</h1>
-      <div id="pixels-main" class="matrix"></div>
+      <h3 style="display:inline">Target</h3>
+      <div id="pixels-target" class="matrix"></div>
+    </div>
+
+    <div class="grid-top-middle">
+      <h3>Goal</h3>
+      <div id="pixels-goal" class="matrix"></div>
     </div>
 
     <div class="grid-top-right">
-      <h3>Goal</h3>
-      <div id="pixels-goal" class="matrix"></div>
+      <div>No. <span id="puzzle-num"></span></div>
+      <div>Count: <span id="counter"></span></div>
+      <div>Hint:
+        <span id="hint">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Ab amet cum earum laborum quia atque et reprehenderit,
+        </span>
+      </div>
     </div>
 
     <div class="grid-bottom-left">
@@ -40,16 +51,31 @@
     </div>
 
     <div class="grid-bottom-right">
-      <div class="button-container">
-        <button id="btn-reset">Reset</button>
-        <button id="btn-apply">Apply Rule</button>
-      </div>
+      <button id="btn-reset">Reset</button>
+      <button id="btn-apply">Apply</button>
     </div>
 
   </div>
 
-  <h3>Last message from Devvit blocks:</h3>
-  <pre id="messageOutput"></pre>
+  <div id="solved" class="grid-container">
+
+    <!-- <div class="grid-top-left"></div> -->
+
+    <div class="grid-top-middle">
+      <h3>Solved</h3>
+      <div id="pixels-solved" class="matrix"></div>
+    </div>
+
+    <!-- <div class="grid-top-right"></div>
+    <div class="grid-bottom-left"></div>
+    <div class="grid-bottom-middle"></div> -->
+
+    <div class="grid-bottom-right">
+      <div class="button-container">
+        <button id="btn-next-puzzle">Next</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="script.js"></script>
 </body>

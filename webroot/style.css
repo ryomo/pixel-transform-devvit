@@ -5,23 +5,20 @@
   --accent-color: #60a5fa;
   --border-radius: 6px;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --body-padding: 1rem;
 }
 
 body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1rem;
-  max-width: 650px;
+  padding: var(--body-padding);
   margin: 0 auto;
   min-height: 100vh;
   background-color: var(--background-color);
   color: var(--text-color);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.3;
-  position: fixed;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 2 * var(--body-padding));
 }
 
 h1,
@@ -45,6 +42,74 @@ h2 {
 h3 {
   font-size: 1.1rem;
   font-weight: 500;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 10px;
+
+  .grid-top-left {
+    grid-column: 1/ 3;
+    grid-row: 1 / 3;
+    background: #a7b7a9;
+  }
+
+  .grid-top-right {
+    grid-column: 3 / 4;
+    grid-row: 1 / 3;
+    background: #100b3e;
+  }
+
+  .grid-bottom-left {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+    background: #620e83;
+  }
+
+  .grid-bottom-middle {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+    background: #11bf2e;
+  }
+
+  .grid-bottom-right {
+    grid-column: 3 / 4;
+    grid-row: 3 / 4;
+    background: #11bf2e;
+  }
+}
+
+.matrix {
+  /* Note: `grid-template-columns` is set in JavaScript. */
+
+  display: grid;
+  gap: 2px;
+  border: #100b3e 5px solid;
+
+  .cell {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: inline-block;
+    box-sizing: border-box;
+
+    &.black {
+      background-color: black;
+    }
+
+    &.white {
+      background-color: white;
+    }
+
+    &.matched {
+      border: blue 5px solid;
+    }
+
+    &.search {
+      border: gray 5px solid;
+    }
+  }
 }
 
 #username,
@@ -100,15 +165,4 @@ pre {
   border: 1px solid #e5e7eb;
   font-size: 0.9rem;
   margin: 0;
-}
-
-@media (max-width: 640px) {
-  body {
-    padding: 0.75rem;
-    gap: 0.5rem;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-  }
 }

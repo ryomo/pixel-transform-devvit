@@ -1,24 +1,57 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <meta charset="UTF-8" />
-    <title>Pixel Transform</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <h1>This is your page.html</h1>
-    <h3>Your username is <span id="username">Guest</span></h3>
-    <h3>Current counter is at: <span id="counter">0</span></h3>
-    <div class="button-container">
-      <button id="btn-increase">Increase Counter ⬆️</button>
-      <button id="btn-decrease">Decrease Counter ⬇️</button>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8" />
+  <title>Pixel Transform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- <h1>Pixel Transform</h1> -->
+  <!-- <h3>Your username is <span id="username">Guest</span></h3>
+  <h3>Current counter is at: <span id="counter">0</span></h3>
+  <div class="button-container">
+    <button id="btn-increase">Increase Counter ⬆️</button>
+    <button id="btn-decrease">Decrease Counter ⬇️</button>
+  </div> -->
+
+  <div class="grid-container">
+
+    <div class="grid-top-left">
+      <h1>Pixel Transform</h1>
+      <div id="pixels-main" class="matrix"></div>
     </div>
-    <h3>Last message from Devvit blocks:</h3>
-    <pre id="messageOutput"></pre>
-    <script type="application/javascript" src="script.js"></script>
-  </body>
+
+    <div class="grid-top-right">
+      <h3>Goal</h3>
+      <div id="pixels-goal" class="matrix"></div>
+    </div>
+
+    <div class="grid-bottom-left">
+      <h3>Search</h3>
+      <div id="pixels-search" class="matrix"></div>
+    </div>
+
+    <div class="grid-bottom-middle">
+      <h3>Replace</h3>
+      <div id="pixels-replace" class="matrix"></div>
+    </div>
+
+    <div class="grid-bottom-right">
+      <div class="button-container">
+        <button id="btn-reset">Reset</button>
+        <button id="btn-apply">Apply Rule</button>
+      </div>
+    </div>
+
+  </div>
+
+  <h3>Last message from Devvit blocks:</h3>
+  <pre id="messageOutput"></pre>
+
+  <script type="module" src="script.js"></script>
+</body>
+
 </html>

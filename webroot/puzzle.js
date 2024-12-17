@@ -53,10 +53,14 @@ export class Puzzle {
     this.counterMax = this.puzzles[puzzleIndex].count;
     this.hint = this.puzzles[puzzleIndex].hint;
 
-    this.targetPixelsArray = this.puzzles[puzzleIndex].target;
-    this.goalPixelsArray = this.puzzles[puzzleIndex].goal;
-    this.searchPixelsArray = this.puzzles[puzzleIndex].search;
-    this.replacePixelsArray = this.puzzles[puzzleIndex].replace;
+    this.targetPixelsArray = deepCopyArray(this.puzzles[puzzleIndex].target);
+    this.goalPixelsArray = deepCopyArray(this.puzzles[puzzleIndex].goal);
+    this.searchPixelsArray = deepCopyArray(this.puzzles[puzzleIndex].search);
+    this.replacePixelsArray = deepCopyArray(this.puzzles[puzzleIndex].replace);
+
+    function deepCopyArray(arr) {
+      return JSON.parse(JSON.stringify(arr));
+    }
   }
 
   /**

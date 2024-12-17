@@ -1,18 +1,21 @@
+import { DevvitMessenger } from "./devvitMessenger.js";
 import { Puzzle } from "./puzzle.js";
 
 export class Dom {
 
   /**
    * @param {Puzzle} puzzle
+   * @param {DevvitMessenger} devvitMessenger
    */
-  init(puzzle) {
+  init(puzzle, devvitMessenger) {
     this.puzzle = puzzle;
+    this.devvitMessenger = devvitMessenger;
 
     // #btn-reset
     const resetButton = document.getElementById('btn-reset');
     resetButton.addEventListener('click', async () => {
       await puzzle.abortApplyingRule();
-      puzzle.initPuzzle();
+      puzzle.initPuzzle(puzzle.puzzleIndex);
     });
 
     // #btn-apply
@@ -24,12 +27,14 @@ export class Dom {
       switch (status) {
         case 'solved':
           console.log('Solved!');
+          this.saveLastSolvedPuzzleIndex(this.puzzle.puzzleIndex);
           this.showPage('solved');
           this.renderPixels('solved-pixels-goal', puzzle.goalPixelsArray);
           break;
 
         case 'cleared':
           console.log('Cleared!');
+          this.saveLastSolvedPuzzleIndex(this.puzzle.puzzleIndex);
           this.showPage('cleared');
           break;
 
@@ -49,16 +54,19 @@ export class Dom {
     nextPuzzleButton.addEventListener('click', async () => {
       this.showPage('main');
 
-      puzzle.puzzleIndex += 1;
-      puzzle.initPuzzle();
+      puzzle.initPuzzle(puzzle.puzzleIndex + 1);
     });
 
     // #btn-retry
     const retryButton = document.getElementById('btn-retry');
     retryButton.addEventListener('click', async () => {
       this.showPage('main');
-      puzzle.initPuzzle();
+      puzzle.initPuzzle(puzzle.puzzleIndex);
     });
+  }
+
+  saveLastSolvedPuzzleIndex(puzzleIndex) {
+    this.devvitMessenger.saveLastSolvedPuzzleIndex(puzzleIndex);
   }
 
   /**

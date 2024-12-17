@@ -3,18 +3,14 @@ import './createPost.js';
 import { Devvit, useState } from '@devvit/public-api';
 
 // Defines the messages that are exchanged between Devvit and Web View
-type WebViewMessage =
+export type WebViewMessage =
   | {
       type: 'initialData';
-      data: { username: string; currentCounter: number };
+      data: { username: string; lastSolvedPuzzleIndex: number };
     }
   | {
-      type: 'setCounter';
-      data: { newCounter: number };
-    }
-  | {
-      type: 'updateCounter';
-      data: { currentCounter: number };
+      type: 'saveLastSolvedPuzzleIndex';
+      data: { lastSolvedPuzzleIndex: number };
     };
 
 Devvit.configure({
@@ -33,10 +29,10 @@ Devvit.addCustomPostType({
       return currUser?.username ?? 'anon';
     });
 
-    // Load latest counter from redis with `useState` hook
-    const [counter, setCounter] = useState(async () => {
-      const redisCount = await context.redis.get(`counter_${context.postId}`);
-      return Number(redisCount ?? 0);
+    // Load last played puzzle index with `useState` hook
+    const [lastSolvedPuzzleIndex, saveLastSolvedPuzzleIndex] = useState(async () => {
+      const lastSolvedPuzzleIndex = await context.redis.get(`lastPlayedPuzzleIndex_${context.postId}`);
+      return Number(lastSolvedPuzzleIndex ?? -1);
     });
 
     // Create a reactive state for web view visibility
@@ -45,18 +41,18 @@ Devvit.addCustomPostType({
     // When the web view invokes `window.parent.postMessage` this function is called
     const onMessage = async (msg: WebViewMessage) => {
       switch (msg.type) {
-        case 'setCounter':
-          await context.redis.set(`counter_${context.postId}`, msg.data.newCounter.toString());
+        case 'initialData':
+          break;
+
+        case 'saveLastSolvedPuzzleIndex':
+          await context.redis.set(`lastPlayedPuzzleIndex_${context.postId}`, msg.data.lastSolvedPuzzleIndex.toString());
           context.ui.webView.postMessage('myWebView', {
-            type: 'updateCounter',
+            type: 'savedLastSolvedPuzzleIndex',
             data: {
-              currentCounter: msg.data.newCounter,
+              savedLastSolvedPuzzleIndex: msg.data.lastSolvedPuzzleIndex,
             },
           });
-          setCounter(msg.data.newCounter);
-          break;
-        case 'initialData':
-        case 'updateCounter':
+          saveLastSolvedPuzzleIndex(msg.data.lastSolvedPuzzleIndex);
           break;
 
         default:
@@ -71,7 +67,7 @@ Devvit.addCustomPostType({
         type: 'initialData',
         data: {
           username: username,
-          currentCounter: counter,
+          lastSolvedPuzzleIndex: lastSolvedPuzzleIndex,
         },
       });
     };
@@ -117,10 +113,10 @@ Devvit.addCustomPostType({
                   </text>
                 </hstack>
                 <hstack>
-                  <text size="medium" outline='thick'>Current counter:</text>
+                  <text size="medium" outline='thick'>Last solved puzzle number:</text>
                   <text size="medium" weight="bold" outline='thick'>
                     {' '}
-                    {counter ?? ''}
+                    {(lastSolvedPuzzleIndex === -1) ? 'N/A' : lastSolvedPuzzleIndex + 1}
                   </text>
                 </hstack>
               </vstack>

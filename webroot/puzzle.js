@@ -22,13 +22,19 @@ export class Puzzle {
 
   async init() {
     this.puzzles = await this.loadPuzzleData();
-    this.initPuzzle();
+    this.initPuzzle(this.puzzleIndex);
   }
 
   /**
    * Initialize the single puzzle
+   * @param {number} puzzleIndex - The index of the puzzle to start with.
    */
-  initPuzzle() {
+  initPuzzle(puzzleIndex) {
+    if (this.puzzles.length < puzzleIndex + 1) {
+      puzzleIndex = this.puzzles.length;
+    }
+    this.puzzleIndex = puzzleIndex;
+
     this.setPuzzleData(this.puzzleIndex);
 
     this.counter = 0;
@@ -156,8 +162,6 @@ export class Puzzle {
   }
 
   _checkCleared() {
-    console.log('Puzzle index:', this.puzzleIndex);
-    console.log('Puzzles length:', this.puzzles.length);
     return this.puzzleIndex === this.puzzles.length - 1;
   }
 

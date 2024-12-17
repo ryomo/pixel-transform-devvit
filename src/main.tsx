@@ -79,34 +79,59 @@ Devvit.addCustomPostType({
     // Render the custom post type
     return (
       <vstack grow padding="small">
+
+        {/* Blocks */}
         <vstack
           grow={!webviewVisible}
           height={webviewVisible ? '0%' : '100%'}
           alignment="middle center"
         >
-          <text size="xlarge" weight="bold">
-            Pixel Transform
-          </text>
-          <spacer />
-          <vstack alignment="start middle">
-            <hstack>
-              <text size="medium">Username:</text>
-              <text size="medium" weight="bold">
-                {' '}
-                {username ?? ''}
+          <zstack width="100%" height="100%">
+
+            <image
+              url="background.png"
+              imageHeight={webviewVisible ? 0 : 662}
+              imageWidth={webviewVisible ? 0 : 760}
+              height={webviewVisible ? '0%' : '100%'}
+              width={webviewVisible ? '0%' : '100%'}
+              resizeMode="fit"
+            />
+
+            <vstack
+              grow={!webviewVisible}
+              height={webviewVisible ? '0%' : '100%'}
+              width={webviewVisible ? '0%' : '100%'}
+              alignment="middle center"
+              backgroundColor='rgba(255, 255, 255, 0.5)'
+            >
+              <text size="xlarge" weight="bold" outline='thick'>
+                Pixel Transform
               </text>
-            </hstack>
-            <hstack>
-              <text size="medium">Current counter:</text>
-              <text size="medium" weight="bold">
-                {' '}
-                {counter ?? ''}
-              </text>
-            </hstack>
-          </vstack>
-          <spacer />
-          <button onPress={onShowWebviewClick}>Launch App</button>
+              <spacer />
+              <vstack alignment="start middle">
+                <hstack>
+                  <text size="medium" outline='thick'>Username:</text>
+                  <text size="medium" weight="bold" outline='thick'>
+                    {' '}
+                    {username ?? ''}
+                  </text>
+                </hstack>
+                <hstack>
+                  <text size="medium" outline='thick'>Current counter:</text>
+                  <text size="medium" weight="bold" outline='thick'>
+                    {' '}
+                    {counter ?? ''}
+                  </text>
+                </hstack>
+              </vstack>
+              <spacer />
+              <button onPress={onShowWebviewClick}>Launch App</button>
+            </vstack>
+
+          </zstack>
         </vstack>
+
+        {/* WebView */}
         <vstack grow={webviewVisible} height={webviewVisible ? '100%' : '0%'}>
           <vstack border="thick" borderColor="black" height={webviewVisible ? '100%' : '0%'}>
             <webview
@@ -118,6 +143,7 @@ Devvit.addCustomPostType({
             />
           </vstack>
         </vstack>
+
       </vstack>
     );
   },

@@ -21,33 +21,57 @@ export class Dom {
       await puzzle.applyRule();
 
       if (puzzle.checkSolved()) {
+        // Solved
         console.log('Solved!');
+        this.showPage('solved');
+        this.renderPixels('solved-pixels-goal', puzzle.goalPixelsArray);
 
-        this.showSolvedPage();
-        this.renderPixels('pixels-solved', puzzle.goalPixelsArray);
+      } else if (puzzle.checkGameOver()) {
+        // Game over
+        console.log('Game over!');
+        this.showPage('gameover');
+        this.renderPixels('gameover-pixels-target', puzzle.targetPixelsArray);
+        this.renderPixels('gameover-pixels-goal', puzzle.goalPixelsArray);
+
+        const puzzleNumElm = document.getElementById('gameover-puzzle-num');
+        puzzleNumElm.innerText = puzzle.puzzleNum
+
+        this.updateCounter('gameover', puzzle.counter, puzzle.counterMax);
       }
     });
 
     // #btn-next-puzzle
     const nextPuzzleButton = document.getElementById('btn-next-puzzle');
     nextPuzzleButton.addEventListener('click', async () => {
-      this.showSolvedPage(false);
+      this.showPage('main');
 
       puzzle.puzzleIndex += 1;
+      await puzzle.init();
+    });
+
+    // #btn-retry
+    const retryButton = document.getElementById('btn-retry');
+    retryButton.addEventListener('click', async () => {
+      this.showPage('main');
       await puzzle.init();
     });
   }
 
   /**
-   * Show "Solved" page
-   * @param {boolean} solvedPage - If set to false, show the main page.
+   * Show the specified page
+   * @param {string} pageName
    */
-  showSolvedPage(solvedPage = true) {
-    const main = document.getElementById('main');
-    const solved = document.getElementById('solved');
+  showPage(pageName = 'main') {
+    const pageNames = ['main', 'solved', 'congratulations', 'gameover'];
+    if (!pageNames.includes(pageName)) {
+      console.error('Invalid page name');
+      return;
+    }
 
-    main.style.display = (solvedPage) ? 'none' : 'grid';
-    solved.style.display = (solvedPage) ? 'grid' : 'none';
+    pageNames.forEach(_pageName => {
+      const page = document.getElementById(_pageName);
+      page.style.display = (_pageName === pageName) ? 'grid' : 'none';
+    });
   }
 
   /**
@@ -57,11 +81,11 @@ export class Dom {
    * @param {Array} searchPixelsArray
    * @param {Array} replacePixelsArray
    */
-  renderAllPixels(targetPixelsArray, goalPixelsArray, searchPixelsArray, replacePixelsArray) {
-    this.renderPixels('pixels-target', targetPixelsArray, true);
-    this.renderPixels('pixels-goal', goalPixelsArray);
-    this.renderPixels('pixels-search', searchPixelsArray, false, true);
-    this.renderPixels('pixels-replace', replacePixelsArray, false, true);
+  renderAllMainPixels(targetPixelsArray, goalPixelsArray, searchPixelsArray, replacePixelsArray) {
+    this.renderPixels('main-pixels-target', targetPixelsArray, true);
+    this.renderPixels('main-pixels-goal', goalPixelsArray);
+    this.renderPixels('main-pixels-search', searchPixelsArray, false, true);
+    this.renderPixels('main-pixels-replace', replacePixelsArray, false, true);
   }
 
   /**
@@ -109,24 +133,26 @@ export class Dom {
 
   /**
    * Update the counter on the page
+   * @param {string} idPrefix
    * @param {number} counter
    * @param {number} counterMax
    */
-  updateCounter(counter, counterMax) {
-    const counterElm = document.getElementById('counter');
+  updateCounter(idPrefix, counter, counterMax) {
+    const counterElm = document.getElementById(`${idPrefix}-counter`);
     counterElm.innerText = counter + ' / ' + counterMax;
   }
 
   /**
    * Show metadata on the page
+   * @param {string} idPrefix
    * @param {number} puzzleNum
    * @param {string} hint
    */
-  showMetadata(puzzleNum, hint) {
-    const puzzleNumElm = document.getElementById('puzzle-num');
+  showMetadata(idPrefix, puzzleNum, hint) {
+    const puzzleNumElm = document.getElementById(`${idPrefix}-puzzle-num`);
     puzzleNumElm.innerText = puzzleNum
 
-    const hintElm = document.getElementById('hint');
+    const hintElm = document.getElementById(`${idPrefix}-hint`);
     hintElm.innerText = hint;
   }
 

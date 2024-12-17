@@ -23,14 +23,14 @@ export class Puzzle {
     await this.loadPuzzleData(this.puzzleIndex);
     this.counter = 0;
 
-    this.dom.renderAllPixels(
+    this.dom.renderAllMainPixels(
       this.targetPixelsArray,
       this.goalPixelsArray,
       this.searchPixelsArray,
       this.replacePixelsArray
     );
-    this.dom.updateCounter(this.counter, this.counterMax);
-    this.dom.showMetadata(this.puzzleNum, this.hint);
+    this.dom.updateCounter('main', this.counter, this.counterMax);
+    this.dom.showMetadata('main', this.puzzleNum, this.hint);
   }
 
   async loadPuzzleData(puzzleIndex) {
@@ -68,7 +68,7 @@ export class Puzzle {
       this.isApplyingRule = true;
 
       this.counter += 1;
-      this.dom.updateCounter(this.counter, this.counterMax);
+      this.dom.updateCounter('main', this.counter, this.counterMax);
 
       const targetRowLength = this.targetPixelsArray.length;
       const targetColLength = this.targetPixelsArray[0].length;
@@ -91,7 +91,7 @@ export class Puzzle {
 
             // Replace pixels
             this.replacePixels(i, j, searchRowLength, searchColLength);
-            this.dom.renderPixels('pixels-target', this.targetPixelsArray, true);
+            this.dom.renderPixels('main-pixels-target', this.targetPixelsArray, true);
             this.dom.addClassToArea(i, j, searchRowLength, searchColLength, 'matched');
             await this.sleep();
 
@@ -106,7 +106,7 @@ export class Puzzle {
         }
       }
 
-      this.dom.renderPixels('pixels-target', this.targetPixelsArray, true);
+      this.dom.renderPixels('main-pixels-target', this.targetPixelsArray, true);
       console.log('Rule applied');
       this.isApplyingRule = false;
     };
@@ -127,6 +127,10 @@ export class Puzzle {
       }
     }
     return true;
+  }
+
+  checkGameOver() {
+    return this.counter >= this.counterMax;
   }
 
   /**

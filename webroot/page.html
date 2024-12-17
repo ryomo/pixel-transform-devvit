@@ -12,38 +12,38 @@
 
   <div id="main" class="grid-container">
 
-    <div class="grid-top-left">
+    <div class="grid grid-top-left">
       <h3 style="display:inline">Target</h3>
-      <div id="pixels-target" class="matrix"></div>
+      <div id="main-pixels-target" class="matrix"></div>
     </div>
 
-    <div class="grid-top-middle">
+    <div class="grid grid-top-middle">
       <h3>Goal</h3>
-      <div id="pixels-goal" class="matrix"></div>
+      <div id="main-pixels-goal" class="matrix"></div>
     </div>
 
-    <div class="grid-top-right">
-      <div>No. <span id="puzzle-num"></span></div>
-      <div>Count: <span id="counter"></span></div>
+    <div class="grid grid-top-right">
+      <div>No. <span id="main-puzzle-num"></span></div>
+      <div>Count: <span id="main-counter"></span></div>
       <div>Hint:
-        <span id="hint">
+        <span id="main-hint">
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
           Ab amet cum earum laborum quia atque et reprehenderit,
         </span>
       </div>
     </div>
 
-    <div class="grid-bottom-left">
+    <div class="grid grid-bottom-left">
       <h3>Search</h3>
-      <div id="pixels-search" class="matrix"></div>
+      <div id="main-pixels-search" class="matrix"></div>
     </div>
 
-    <div class="grid-bottom-middle">
+    <div class="grid grid-bottom-middle">
       <h3>Replace</h3>
-      <div id="pixels-replace" class="matrix"></div>
+      <div id="main-pixels-replace" class="matrix"></div>
     </div>
 
-    <div class="grid-bottom-right">
+    <div class="grid grid-bottom-right">
       <button id="btn-reset">Reset</button>
       <button id="btn-apply">Apply</button>
     </div>
@@ -52,16 +52,47 @@
 
   <div id="solved" class="grid-container">
 
-    <div class="grid-top-middle">
-      <h3>Solved</h3>
-      <div id="pixels-solved" class="matrix"></div>
+    <div class="grid grid-top-middle">
+      <h2>Solved</h2>
+      <div id="solved-pixels-goal" class="matrix"></div>
     </div>
 
-    <div class="grid-bottom-right">
-      <div class="button-container">
-        <button id="btn-next-puzzle">Next</button>
+    <div class="grid grid-bottom-right">
+      <button id="btn-next-puzzle">Next</button>
+    </div>
+  </div>
+
+  <div id="congratulations" class="grid-container">
+    <div class="grid grid-top-middle">
+      <h2>Congratulations</h2>
+      <div id="congratulations-text"></div>
+    </div>
+  </div>
+
+  <div id="gameover" class="grid-container">
+
+    <div class="grid grid-top-middle">
+      <h2>Game over</h2>
+      <div id="gameover-text">
+        <div>Puzzle No. <span id="gameover-puzzle-num"></span></div>
+        <div>Count: <span id="gameover-counter"></span></div>
       </div>
     </div>
+
+    <div class="grid grid-bottom-left">
+      <h3 style="display:inline">Target</h3>
+      <div id="gameover-pixels-target" class="matrix"></div>
+    </div>
+
+    <div class="grid grid-bottom-middle">
+      <h3>Goal</h3>
+      <div id="gameover-pixels-goal" class="matrix"></div>
+    </div>
+
+    <div class="grid grid-bottom-right">
+      <button id="btn-retry">Retry</button>
+    </div>
+
   </div>
 
   <script type="module" src="script.js"></script>

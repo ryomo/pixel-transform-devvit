@@ -9,6 +9,7 @@ export class Puzzle {
     this.dom = dom
 
     this.puzzleIndex = 0;
+    this.puzzles = [];
 
     this.targetPixelsArray = [];
     this.goalPixelsArray = [];
@@ -20,7 +21,16 @@ export class Puzzle {
   }
 
   async init() {
-    await this.loadPuzzleData(this.puzzleIndex);
+    this.puzzles = await this.loadPuzzleData();
+    this.initPuzzle();
+  }
+
+  /**
+   * Initialize the single puzzle
+   */
+  initPuzzle() {
+    this.setPuzzleData(this.puzzleIndex);
+
     this.counter = 0;
 
     this.dom.renderAllMainPixels(
@@ -33,18 +43,20 @@ export class Puzzle {
     this.dom.showMetadata('main', this.puzzleNum, this.hint);
   }
 
-  async loadPuzzleData(puzzleIndex) {
-    const puzzles = await fetch('puzzles.json')
+  async loadPuzzleData() {
+    return await fetch('puzzles.json')
       .then(response => response.json());
+  }
 
-    this.puzzleNum = puzzles[puzzleIndex].no;
-    this.counterMax = puzzles[puzzleIndex].count;
-    this.hint = puzzles[puzzleIndex].hint;
+  setPuzzleData(puzzleIndex) {
+    this.puzzleNum = this.puzzles[puzzleIndex].no;
+    this.counterMax = this.puzzles[puzzleIndex].count;
+    this.hint = this.puzzles[puzzleIndex].hint;
 
-    this.targetPixelsArray = puzzles[puzzleIndex].target;
-    this.goalPixelsArray = puzzles[puzzleIndex].goal;
-    this.searchPixelsArray = puzzles[puzzleIndex].search;
-    this.replacePixelsArray = puzzles[puzzleIndex].replace;
+    this.targetPixelsArray = this.puzzles[puzzleIndex].target;
+    this.goalPixelsArray = this.puzzles[puzzleIndex].goal;
+    this.searchPixelsArray = this.puzzles[puzzleIndex].search;
+    this.replacePixelsArray = this.puzzles[puzzleIndex].replace;
   }
 
   /**
@@ -115,7 +127,18 @@ export class Puzzle {
     return this.applyRulePromise;
   }
 
-  checkSolved() {
+  checkStatusAfterApplyingRule() {
+    if (this._checkSolved()) {
+      if (this._checkCleared()) {
+        return 'cleared';
+      }
+      return 'solved';
+    } else if (this._checkGameOver()) {
+      return 'gameover';
+    }
+  }
+
+  _checkSolved() {
     const targetRowLength = this.targetPixelsArray.length;
     const targetColLength = this.targetPixelsArray[0].length;
 
@@ -129,7 +152,13 @@ export class Puzzle {
     return true;
   }
 
-  checkGameOver() {
+  _checkCleared() {
+    console.log('Puzzle index:', this.puzzleIndex);
+    console.log('Puzzles length:', this.puzzles.length);
+    return this.puzzleIndex === this.puzzles.length - 1;
+  }
+
+  _checkGameOver() {
     return this.counter >= this.counterMax;
   }
 

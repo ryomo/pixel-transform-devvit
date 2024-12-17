@@ -2,7 +2,7 @@
   {
     "no": 1,
     "count": 1,
-    "hint": "The goal is to convert Target to Goal matrix by replacing Search matrix with Replace matrix. Now, you can just push \"Apply\" button to see the result.",
+    "hint": "The goal is to transform the Target matrix into the Goal matrix by replacing the Search matrix with the Replace matrix. Click \"Apply\" to see the result.",
     "target": [
       [0, 1, 0],
       [1, 0, 1],

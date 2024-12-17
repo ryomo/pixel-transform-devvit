@@ -135,12 +135,6 @@ h3 {
   }
 }
 
-#username,
-#counter {
-  color: var(--accent-color);
-  font-weight: 600;
-}
-
 button {
   padding: 0.5rem 1rem;
   border: none;
@@ -168,11 +162,23 @@ button {
 
 #main {
   /* display: none; */
+
+  #main-counter-container {
+    float: right;
+  }
+  #main-counter {
+    color: var(--accent-color);
+    font-weight: 600;
+  }
+
+  #main-hint {
+    margin-top: 1rem;
+  }
 }
 
 #solved {
-  /* display: grid; */
   display: none;
+  /* display: grid; */
 
   grid-template-columns: 1fr 2fr 1fr;
   grid-template-rows: 2fr 1fr;
@@ -183,9 +189,9 @@ button {
   }
 }
 
-#congratulations {
-  /* display: grid; */
+#cleared {
   display: none;
+  /* display: grid; */
 
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-rows: 4fr 1fr;
@@ -194,11 +200,15 @@ button {
   h1, h2, h3 {
     color: var(--accent-color);
   }
+
+  #cleared-text {
+    margin-top: 2rem;
+  }
 }
 
 #gameover {
-  /* display: grid; */
   display: none;
+  /* display: grid; */
 
   grid-template-columns: 2fr 2fr 1fr;
   grid-template-rows: 1fr 1fr;

@@ -12,7 +12,7 @@ export class Dom {
     const resetButton = document.getElementById('btn-reset');
     resetButton.addEventListener('click', async () => {
       await puzzle.abortApplyingRule();
-      await puzzle.init();
+      puzzle.initPuzzle();
     });
 
     // #btn-apply
@@ -20,23 +20,27 @@ export class Dom {
     applyButton.addEventListener('click', async () => {
       await puzzle.applyRule();
 
-      if (puzzle.checkSolved()) {
-        // Solved
-        console.log('Solved!');
-        this.showPage('solved');
-        this.renderPixels('solved-pixels-goal', puzzle.goalPixelsArray);
+      const status = puzzle.checkStatusAfterApplyingRule();
+      switch (status) {
+        case 'solved':
+          console.log('Solved!');
+          this.showPage('solved');
+          this.renderPixels('solved-pixels-goal', puzzle.goalPixelsArray);
+          break;
 
-      } else if (puzzle.checkGameOver()) {
-        // Game over
-        console.log('Game over!');
-        this.showPage('gameover');
-        this.renderPixels('gameover-pixels-target', puzzle.targetPixelsArray);
-        this.renderPixels('gameover-pixels-goal', puzzle.goalPixelsArray);
+        case 'cleared':
+          console.log('Cleared!');
+          this.showPage('cleared');
+          break;
 
-        const puzzleNumElm = document.getElementById('gameover-puzzle-num');
-        puzzleNumElm.innerText = puzzle.puzzleNum
-
-        this.updateCounter('gameover', puzzle.counter, puzzle.counterMax);
+        case 'gameover':
+          console.log('Game over!');
+          this.showPage('gameover');
+          this.renderPixels('gameover-pixels-target', puzzle.targetPixelsArray);
+          this.renderPixels('gameover-pixels-goal', puzzle.goalPixelsArray);
+          this.showMetadata('gameover', puzzle.puzzleNum, puzzle.hint);
+          this.updateCounter('gameover', puzzle.counter, puzzle.counterMax);
+          break;
       }
     });
 
@@ -46,14 +50,14 @@ export class Dom {
       this.showPage('main');
 
       puzzle.puzzleIndex += 1;
-      await puzzle.init();
+      puzzle.initPuzzle();
     });
 
     // #btn-retry
     const retryButton = document.getElementById('btn-retry');
     retryButton.addEventListener('click', async () => {
       this.showPage('main');
-      await puzzle.init();
+      puzzle.initPuzzle();
     });
   }
 
@@ -62,7 +66,7 @@ export class Dom {
    * @param {string} pageName
    */
   showPage(pageName = 'main') {
-    const pageNames = ['main', 'solved', 'congratulations', 'gameover'];
+    const pageNames = ['main', 'solved', 'cleared', 'gameover'];
     if (!pageNames.includes(pageName)) {
       console.error('Invalid page name');
       return;
@@ -150,10 +154,14 @@ export class Dom {
    */
   showMetadata(idPrefix, puzzleNum, hint) {
     const puzzleNumElm = document.getElementById(`${idPrefix}-puzzle-num`);
-    puzzleNumElm.innerText = puzzleNum
+    if (puzzleNumElm) {
+      puzzleNumElm.innerText = puzzleNum
+    }
 
     const hintElm = document.getElementById(`${idPrefix}-hint`);
-    hintElm.innerText = hint;
+    if (hintElm) {
+      hintElm.innerText = hint;
+    }
   }
 
   /**

@@ -23,6 +23,8 @@ Devvit.addCustomPostType({
   name: 'Pixel Transform',
   height: 'tall',
   render: (context) => {
+    const redisKeyLastPlayedPuzzleIndex = `lastPlayedPuzzleIndex_${context.postId}`;
+
     // Load username with `useState` hook
     const [username] = useState(async () => {
       const currUser = await context.reddit.getCurrentUser();
@@ -30,7 +32,7 @@ Devvit.addCustomPostType({
     });
 
     // Load last played puzzle index with `useState` hook
-    const [lastSolvedPuzzleIndex, saveLastSolvedPuzzleIndex] = useState(async () => {
+    const [lastSolvedPuzzleIndex, updateLastSolvedPuzzleIndex] = useState(async () => {
       const lastSolvedPuzzleIndex = await context.redis.get(`lastPlayedPuzzleIndex_${context.postId}`);
       return Number(lastSolvedPuzzleIndex ?? -1);
     });
@@ -38,22 +40,26 @@ Devvit.addCustomPostType({
     // Create a reactive state for web view visibility
     const [webviewVisible, setWebviewVisible] = useState(false);
 
+    const [isDataBeingDeleted, setDataBeingDeleted] = useState(false);
+
     // When the web view invokes `window.parent.postMessage` this function is called
     const onMessage = async (msg: WebViewMessage) => {
       switch (msg.type) {
         case 'initialData':
           break;
 
-        case 'saveLastSolvedPuzzleIndex':
-          await context.redis.set(`lastPlayedPuzzleIndex_${context.postId}`, msg.data.lastSolvedPuzzleIndex.toString());
+        case 'saveLastSolvedPuzzleIndex': {
+          const value = msg.data.lastSolvedPuzzleIndex.toString()
+          await context.redis.set(redisKeyLastPlayedPuzzleIndex, value);
           context.ui.webView.postMessage('myWebView', {
             type: 'savedLastSolvedPuzzleIndex',
             data: {
               savedLastSolvedPuzzleIndex: msg.data.lastSolvedPuzzleIndex,
             },
           });
-          saveLastSolvedPuzzleIndex(msg.data.lastSolvedPuzzleIndex);
+          console.log('redis.set:', `${redisKeyLastPlayedPuzzleIndex}: ${value}`)
           break;
+        }
 
         default:
           throw new Error(`Unknown message type: ${msg satisfies never}`);
@@ -70,6 +76,14 @@ Devvit.addCustomPostType({
           lastSolvedPuzzleIndex: lastSolvedPuzzleIndex,
         },
       });
+    };
+
+    const onResetAppDataClick = async () => {
+      await context.redis.del(redisKeyLastPlayedPuzzleIndex);
+      const value = await context.redis.get(redisKeyLastPlayedPuzzleIndex);
+      console.log('redis.del:', `${redisKeyLastPlayedPuzzleIndex}: ${value}`);
+      updateLastSolvedPuzzleIndex(-1);
+      setDataBeingDeleted(true);
     };
 
     // Render the custom post type
@@ -121,7 +135,23 @@ Devvit.addCustomPostType({
                 </hstack>
               </vstack>
               <spacer />
-              <button onPress={onShowWebviewClick}>Launch App</button>
+              <button
+                onPress={onShowWebviewClick}
+                icon='play'
+                appearance='primary'
+              >
+                Launch App
+              </button>
+              <spacer size='large' />
+              <button
+                onPress={onResetAppDataClick}
+                size='small'
+                icon='delete'
+                appearance='caution'
+                disabled={isDataBeingDeleted}
+              >
+                Reset App Data
+              </button>
             </vstack>
 
           </zstack>

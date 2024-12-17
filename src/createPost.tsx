@@ -7,7 +7,7 @@ Devvit.configure({
 
 // Adds a new menu item to the subreddit allowing to create a new post
 Devvit.addMenuItem({
-  label: 'Create New Pixel Transform Post',
+  label: 'Create "Pixel Transform" app',
   location: 'subreddit',
   onPress: async (_event, context) => {
     const { reddit, ui } = context;

@@ -114,21 +114,21 @@ Devvit.addCustomPostType({
               alignment="middle center"
               backgroundColor='rgba(255, 255, 255, 0.5)'
             >
-              <text size="xlarge" weight="bold" outline='thick'>
+              <text size="xlarge" weight="bold" color='black' outline='thick'>
                 Pixel Transform
               </text>
               <spacer />
               <vstack alignment="start middle">
                 <hstack>
-                  <text size="medium" outline='thick'>Username:</text>
-                  <text size="medium" weight="bold" outline='thick'>
+                  <text size="medium" color='black' outline='thick'>Username:</text>
+                  <text size="medium" weight="bold" color='black' outline='thick'>
                     {' '}
                     {username ?? ''}
                   </text>
                 </hstack>
                 <hstack>
-                  <text size="medium" outline='thick'>Last solved puzzle number:</text>
-                  <text size="medium" weight="bold" outline='thick'>
+                  <text size="medium" color='black' outline='thick'>Last solved puzzle number:</text>
+                  <text size="medium" weight="bold" color='black' outline='thick'>
                     {' '}
                     {(lastSolvedPuzzleIndex === -1) ? 'N/A' : lastSolvedPuzzleIndex + 1}
                   </text>
@@ -147,7 +147,6 @@ Devvit.addCustomPostType({
                 onPress={onResetAppDataClick}
                 size='small'
                 icon='delete'
-                appearance='caution'
                 disabled={isDataBeingDeleted}
               >
                 Reset App Data

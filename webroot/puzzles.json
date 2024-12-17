@@ -1,6 +1,5 @@
 [
   {
-    "no": 1,
     "count": 1,
     "hint": "The goal is to transform the Target matrix into the Goal matrix by replacing the Search matrix with the Replace matrix. Click \"Apply\" to see the result.",
     "target": [
@@ -21,7 +20,6 @@
     ]
   },
   {
-    "no": 2,
     "count": 1,
     "hint": "",
     "target": [
@@ -44,7 +42,6 @@
     ]
   },
   {
-    "no": 3,
     "count": 2,
     "hint": "",
     "target": [

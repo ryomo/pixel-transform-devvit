@@ -38,7 +38,7 @@ export class Dom {
           this.showPage('gameover');
           this.renderPixels('gameover-pixels-target', puzzle.targetPixelsArray);
           this.renderPixels('gameover-pixels-goal', puzzle.goalPixelsArray);
-          this.showMetadata('gameover', puzzle.puzzleNum, puzzle.hint);
+          this.showMetadata('gameover', puzzle.puzzleIndex, puzzle.hint);
           this.updateCounter('gameover', puzzle.counter, puzzle.counterMax);
           break;
       }
@@ -149,10 +149,11 @@ export class Dom {
   /**
    * Show metadata on the page
    * @param {string} idPrefix
-   * @param {number} puzzleNum
+   * @param {number} puzzleIndex
    * @param {string} hint
    */
-  showMetadata(idPrefix, puzzleNum, hint) {
+  showMetadata(idPrefix, puzzleIndex, hint) {
+    const puzzleNum = puzzleIndex + 1;
     const puzzleNumElm = document.getElementById(`${idPrefix}-puzzle-num`);
     if (puzzleNumElm) {
       puzzleNumElm.innerText = puzzleNum

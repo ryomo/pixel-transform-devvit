@@ -40,7 +40,7 @@ export class Puzzle {
       this.replacePixelsArray
     );
     this.dom.updateCounter('main', this.counter, this.counterMax);
-    this.dom.showMetadata('main', this.puzzleNum, this.hint);
+    this.dom.showMetadata('main', this.puzzleIndex, this.hint);
   }
 
   async loadPuzzleData() {
@@ -49,7 +49,6 @@ export class Puzzle {
   }
 
   setPuzzleData(puzzleIndex) {
-    this.puzzleNum = this.puzzles[puzzleIndex].no;
     this.counterMax = this.puzzles[puzzleIndex].count;
     this.hint = this.puzzles[puzzleIndex].hint;
 

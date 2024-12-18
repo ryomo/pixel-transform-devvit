@@ -1,16 +1,15 @@
 [
   {
+    "checked": true,
     "count": 1,
-    "hint": "The goal is to transform the Target matrix into the Goal matrix by replacing the Search matrix with the Replace matrix. Click \"Apply\" to see the result.",
+    "hint": "Start simple: Click \"Apply\" to see the result.",
     "target": [
-      [0, 1, 0],
-      [1, 0, 1],
-      [0, 1, 0]
+      [1, 0],
+      [0, 1]
     ],
     "goal": [
-      [0, 0, 1],
-      [0, 1, 1],
-      [0, 0, 1]
+      [0, 1],
+      [0, 1]
     ],
     "search": [
       [1, 0]
@@ -20,45 +19,202 @@
     ]
   },
   {
+    "checked": true,
     "count": 1,
-    "hint": "",
+    "hint": "Start simple 2: You can tap on any cell in the Search or Replace matrix to toggle its color between black and white.",
     "target": [
-      [0, 1, 0],
-      [1, 0, 1],
-      [0, 1, 0]
+      [1, 0],
+      [0, 1]
     ],
     "goal": [
-      [0, 0, 1],
-      [0, 1, 1],
+      [0, 1],
+      [0, 1]
+    ],
+    "search": [
+      [0, 0]
+    ],
+    "replace": [
+      [0, 0]
+    ]
+  },
+  {
+    "checked": true,
+    "count": 1,
+    "hint": "Focus on the bottom-right corner. You only need one precise move to complete the transformation.",
+    "target": [
+      [1, 0, 0],
+      [0, 1, 0],
       [0, 0, 1]
+    ],
+    "goal": [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 1]
+    ],
+    "search": [
+      [0, 0],
+      [0, 0]
+    ],
+    "replace": [
+      [0, 0],
+      [0, 0]
+    ]
+  },
+  {
+    "checked": true,
+    "count": 1,
+    "hint": "Think horizontal—just one swap will align it.",
+    "target": [
+      [1, 0, 1, 0],
+      [1, 0, 1, 0]
+    ],
+    "goal": [
+      [0, 1, 0, 1],
+      [0, 1, 0, 1]
+    ],
+    "search": [
+      [0, 0]
+    ],
+    "replace": [
+      [0, 0]
+    ]
+  },
+  {
+    "checked": true,
+    "count": 2,
+    "hint": "Easy, but you need two moves here. See \"Count\" for the number of moves allowed.",
+    "target": [
+      [1, 1, 0],
+      [1, 1, 0],
+      [0, 0, 1]
+    ],
+    "goal": [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0]
+    ],
+    "search": [
+      [1, 1]
+    ],
+    "replace": [
+      [0, 0]
+    ]
+  },
+  {
+    "checked": true,
+    "count": 2,
+    "hint": "Not so easy—two moves to win!",
+    "target": [
+      [1, 0, 1],
+      [0, 1, 0],
+      [1, 0, 1]
+    ],
+    "goal": [
+      [0, 0, 0],
+      [1, 0, 0],
+      [0, 0, 0]
+    ],
+    "search": [
+      [0, 0]
+    ],
+    "replace": [
+      [0, 0]
+    ]
+  },
+  {
+    "checked": true,
+    "count": 1,
+    "hint": "Bigger board, same rules—just one move to win!",
+    "target": [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+    ],
+    "goal": [
+      [0, 0, 0, 0],
+      [0, 1, 0, 1],
+      [0, 0, 0, 0],
+      [0, 1, 0, 1]
+    ],
+    "search": [
+      [0, 0],
+      [0, 0]
+    ],
+    "replace": [
+      [0, 0],
+      [0, 0]
+    ]
+  },
+  {
+    "checked": true,
+    "count": 2,
+    "hint": "Bouncing the ball",
+    "target": [
+      [1, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+    ],
+    "goal": [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 1, 0],
+      [0, 0, 0, 0]
+    ],
+    "search": [
+      [0, 0],
+      [0, 0]
+    ],
+    "replace": [
+      [0, 0],
+      [0, 0]
+    ]
+  },
+  {
+    "checked": true,
+    "count": 2,
+    "hint": "It may look like one move is enough, but take a closer look—you'll need two swaps to reach the goal!",
+    "target": [
+      [1, 0, 1, 0],
+      [0, 1, 0, 1],
+      [1, 0, 1, 0],
+      [0, 1, 0, 1]
+    ],
+    "goal": [
+      [0, 0, 0, 0],
+      [0, 1, 0, 1],
+      [0, 0, 0, 0],
+      [0, 1, 0, 1]
     ],
     "search": [
       [1, 0],
       [0, 1]
     ],
     "replace": [
-      [0, 1],
-      [1, 0]
+      [0, 0],
+      [0, 1]
     ]
   },
   {
-    "count": 2,
-    "hint": "",
+    "checked": true,
+    "count": 1,
+    "hint": "This is the final puzzle. Now you know the strength of pattern matching, right? Just one move to win!",
     "target": [
-      [0, 1, 0, 1],
-      [1, 0, 1, 0],
-      [0, 1, 0, 1],
+      [0, 1, 1, 1],
+      [1, 0, 0, 0],
+      [0, 1, 1, 0],
       [1, 0, 1, 0]
     ],
     "goal": [
-      [0, 0, 1, 1],
-      [0, 0, 1, 1],
-      [0, 0, 1, 1],
-      [0, 0, 1, 1]
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 1, 0, 1]
     ],
     "search": [
-      [0, 1],
-      [1, 0]
+      [0, 0],
+      [0, 0]
     ],
     "replace": [
       [0, 0],

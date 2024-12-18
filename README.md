@@ -8,6 +8,8 @@ Replace specific patterns in a target matrix to match the goal matrix!
 
 ## How to play
 
+<img src="screenshot.png" width="50%">
+
 ### Objective
 
 Transform the **Target** matrix to match the **Goal** matrix.
@@ -28,11 +30,6 @@ The game is developed using [Devvit](https://www.reddit.com/devvit/), Reddit’s
 Clone [ryomo/pixel-transform-devvit](https://github.com/ryomo/pixel-transform-devvit) and open the `page.html` file in your browser.
 
 Note: Puzzle progress is not saved when playing offline.
-
-
-### Links
-
-* [Devvit](https://www.reddit.com/devvit/)
 
 
 ## Acknowledgements

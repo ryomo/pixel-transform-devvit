@@ -23,7 +23,7 @@ Devvit.addCustomPostType({
   name: 'Pixel Transform',
   height: 'tall',
   render: (context) => {
-    const redisKeyLastPlayedPuzzleIndex = `lastPlayedPuzzleIndex_${context.postId}`;
+    const redisKeyLastPlayedPuzzleIndex = `lastPlayedPuzzleIndex_${context.userId}`;
 
     // Load username with `useState` hook
     const [username] = useState(async () => {
@@ -33,7 +33,7 @@ Devvit.addCustomPostType({
 
     // Load last played puzzle index with `useState` hook
     const [lastSolvedPuzzleIndex, updateLastSolvedPuzzleIndex] = useState(async () => {
-      const lastSolvedPuzzleIndex = await context.redis.get(`lastPlayedPuzzleIndex_${context.postId}`);
+      const lastSolvedPuzzleIndex = await context.redis.get(`lastPlayedPuzzleIndex_${context.userId}`);
       return Number(lastSolvedPuzzleIndex ?? -1);
     });
 
